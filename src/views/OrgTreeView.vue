@@ -89,7 +89,7 @@
 
           <!-- Должности в этом узле -->
           <div class="section" v-if="selectedNode.positions?.length">
-            <div class="section-title">Должности</div>
+            <div class="section-title"></div>
 
             <el-table
               :data="selectedNode.positions"
@@ -370,7 +370,7 @@ function defaultTree(): OrgNode[] {
   return [
     {
       id: 'company',
-      name: 'EXBO',
+      name: 'Тестовая компания',
       type: 'company',
       children: [
         {

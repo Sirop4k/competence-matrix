@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item>EXBO</el-breadcrumb-item>
+      <el-breadcrumb-item>Тестовая компания</el-breadcrumb-item>
       <el-breadcrumb-item>Департамент бизнес-аналитики</el-breadcrumb-item>
       <el-breadcrumb-item>{{ position?.name || 'Должность' }}</el-breadcrumb-item>
     </el-breadcrumb>
