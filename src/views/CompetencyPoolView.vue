@@ -20,11 +20,11 @@
       </el-select>
 
         <el-button
-            type="primary"
-            @click="openCreateModal"
-            :disabled="!isEditMode"
-            >
-            Добавить компетенцию
+          v-if="isEditMode"
+          type="primary"
+          @click="openCreateModal"
+        >
+          Добавить компетенцию
         </el-button>
 
 
@@ -61,7 +61,13 @@
 
   <template #footer>
     <el-button @click="isModalVisible = false">Отмена</el-button>
-    <el-button type="primary" @click="createCompetency">Создать</el-button>
+    <el-button
+      v-if="isEditMode"
+      type="primary"
+      @click="createCompetency"
+    >
+      Создать
+    </el-button>
   </template>
 </el-dialog>
 
@@ -173,8 +179,12 @@
             <el-button @click="isDrawerVisible = false">
                 Закрыть
             </el-button>
-            <el-button type="primary" @click="saveEdited" :disabled="!isEditMode">
-                Сохранить изменения
+            <el-button
+              v-if="isEditMode"
+              type="primary"
+              @click="saveEdited"
+            >
+              Сохранить изменения
             </el-button>
             </div>
         </template>

@@ -1,79 +1,199 @@
+/* === Глобальные переменные темы === */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Цвета — можешь потом спокойно менять под себя */
+  --app-bg: #f3f4f6;
+  --app-text: #111827;
+  --app-text-muted: #6b7280;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --app-primary: #3b82f6;
+  --app-primary-soft: rgba(59, 130, 246, 0.12);
+  --app-primary-strong: #2563eb;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --app-danger: #ef4444;
+
+  --app-card-bg: #ffffff;
+  --app-card-border: rgba(209, 213, 219, 0.9);
+
+  --app-radius-lg: 18px;
+  --app-radius-md: 14px;
+  --app-radius-sm: 10px;
+
+  --app-shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+
+  /* Единый шрифт для всего Element Plus */
+  --el-font-family: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+
+  /* Цвета Element Plus на базе наших */
+  --el-color-primary: var(--app-primary);
+  --el-color-primary-light-3: #60a5fa;
+  --el-color-primary-light-5: #93c5fd;
+  --el-color-primary-light-7: #bfdbfe;
+  --el-color-primary-dark-2: var(--app-primary-strong);
+
+  --el-border-radius-base: 8px;
+  --el-border-radius-small: 6px;
+  --el-border-radius-round: 999px;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* === База: шрифт и фон === */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-a:hover {
-  color: #535bf2;
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--el-font-family) !important;
+}
+
+/* ЖЁСТКО задаём один шрифт всему, чтобы ничего не плясало */
+html,
+body,
+#app,
+.el-container,
+.el-header,
+.el-aside,
+.el-main,
+.el-footer,
+.el-card,
+.el-table,
+.el-dialog {
+  font-family: var(--el-font-family) !important;
+  color: var(--app-text);
 }
 
 body {
-  margin: 0;
+  background: var(--app-bg);
+}
+
+/* Ссылки */
+
+a {
+  color: var(--app-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* === Карточки, таблицы, диалоги === */
+
+.el-card {
+  background-color: var(--app-card-bg) !important;
+  border-radius: var(--app-radius-lg) !important;
+  border: 1px solid var(--app-card-border) !important;
+  box-shadow: var(--app-shadow-soft);
+}
+
+/* Таблица */
+
+.el-table {
+  --el-table-header-bg-color: #f9fafb;
+  --el-table-tr-bg-color: #ffffff;
+  --el-table-row-hover-bg-color: #eff6ff;
+  border-radius: var(--app-radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(209, 213, 219, 0.9);
+}
+
+.el-table th.el-table__cell {
+  font-size: 12px;
+  color: var(--app-text-muted);
+  padding-block: 8px;
+}
+
+.el-table td.el-table__cell {
+  font-size: 13px;
+  color: var(--app-text);
+  border-bottom-color: #e5e7eb;
+  padding-block: 7px;
+}
+
+/* Теги (тип компетенции, грейды и т.п.) */
+
+.el-tag {
+  border-radius: 999px;
+  border: none;
+  background-color: rgba(148, 163, 184, 0.16);
+  color: var(--app-text);
+  padding: 2px 10px;
+  font-size: 11px;
+}
+
+.el-tag--success {
+  background-color: rgba(34, 197, 94, 0.12);
+  color: #166534;
+}
+
+.el-tag--danger {
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+}
+
+/* Инпуты / селекты */
+
+.el-input__wrapper,
+.el-select__wrapper {
+  background-color: #f9fafb;
+  border-radius: 999px;
+}
+
+/* Диалоги */
+
+.el-dialog {
+  border-radius: 18px !important;
+  background-color: #ffffff !important;
+  border: 1px solid rgba(209, 213, 219, 0.9) !important;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+}
+
+/* === Утилиты для страниц ==== */
+
+.page-title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  color: var(--app-text-muted);
+  margin-bottom: 14px;
+}
+
+.page-toolbar {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.page-toolbar__search {
+  flex: 1;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.page-toolbar__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.card {
-  padding: 2em;
+/* Мелкие утилиты */
+
+.text-muted {
+  color: var(--app-text-muted);
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.mr-4 {
+  margin-right: 4px;
 }

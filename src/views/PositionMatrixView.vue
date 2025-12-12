@@ -1,10 +1,17 @@
 <template>
   <div class="page">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item>Тестовая компания</el-breadcrumb-item>
-      <el-breadcrumb-item>Департамент бизнес-аналитики</el-breadcrumb-item>
-      <el-breadcrumb-item>{{ position?.name || 'Должность' }}</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="breadcrumb-row">
+      <el-button
+        link
+        size="small"
+        class="back-button"
+        @click="goBack"
+      >
+        ← Назад
+      </el-button>
+
+    
+  </div>
 
     <el-card class="header-card">
         <div class="header-main">
@@ -148,13 +155,18 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useCompetencyStore } from '../stores/competencyStore'
 import { storeToRefs } from 'pinia'
 import { useUiStore } from '../stores/uiStore'
 
 
 const route = useRoute()
+const router = useRouter()
+
+const goBack = () => {
+  router.back()
+}
 const competencyStore = useCompetencyStore()
 const { all } = storeToRefs(competencyStore)
 
@@ -499,6 +511,17 @@ const removeCompetency = (rowIndex: number) => {
 
 .ml-4 {
   margin-left: 8px;
+}
+
+.breadcrumb-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-button {
+  padding: 0;
+  font-size: 13px;
 }
 
 </style>

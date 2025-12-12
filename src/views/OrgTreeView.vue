@@ -5,6 +5,7 @@
       <el-card class="tree-card">
         <div class="tree-card__title">Структура организации</div>
         <el-tree
+          ref="treeRef"
           :data="treeData"
           node-key="id"
           :props="treeProps"
@@ -15,51 +16,67 @@
 
       <!-- Правый блок: содержимое выбранного узла -->
       <div class="content">
-        <el-card v-if="selectedNode" class="content-card">
+        <el-card 
+        v-if="selectedNode" 
+        class="content-card"
+        @click="focusNode(selectedNode)"
+        >
           <div class="content-header">
-            <div>
-              <div class="content-title">
-                {{ selectedNode.name }}
-              </div>
-              <div class="content-subtitle">
-                {{ nodeTypeLabel(selectedNode.type) }}
+            <div class="content-header-main">
+              <el-button
+                v-if="parentNode"
+                link
+                size="small"
+                class="back-button"
+                @click="goToParent"
+              >
+                ← Назад
+              </el-button>
+
+              <div>
+                <div class="content-title">
+                  {{ selectedNode.name }}
+                </div>
+                <div class="content-subtitle">
+                  {{ nodeTypeLabel(selectedNode.type) }}
+                </div>
               </div>
             </div>
 
             <div class="content-actions">
               <el-button
+                v-if="isEditMode"
                 type="primary"
                 size="small"
                 @click="openAddUnitDialog"
-                :disabled="!isEditMode"
               >
                 Добавить узел
               </el-button>
 
               <el-button
+                v-if="isEditMode"
                 type="success"
                 size="small"
                 @click="openAddPositionDialog"
-                :disabled="!isEditMode"
               >
                 Добавить должность
               </el-button>
 
-              <el-divider />
+              <el-divider v-if="isEditMode" />
 
               <el-button
+                v-if="isEditMode"
                 size="small"
                 @click="openEditNodeDialog"
-                :disabled="!isEditMode"
               >
                 Переименовать
               </el-button>
 
               <el-button
+                v-if="isEditMode && selectedNode.type !== 'company'"
                 type="danger"
                 size="small"
                 @click="openDeleteNodeDialog"
-                :disabled="!isEditMode || selectedNode.type === 'company'"
               >
                 Удалить узел
               </el-button>
@@ -123,6 +140,7 @@
                 align="right"
               >
                 <template #default="scope">
+                  <!-- Матрицу показываем всегда: она сама знает про режим чтения -->
                   <el-button
                     type="primary"
                     size="small"
@@ -132,19 +150,19 @@
                   </el-button>
 
                   <el-button
+                    v-if="isEditMode"
                     type="text"
                     size="small"
                     @click="openEditPosition(scope.row)"
-                    :disabled="!isEditMode"
                   >
                     Редактировать
                   </el-button>
 
                   <el-button
+                    v-if="isEditMode"
                     type="text"
                     size="small"
                     @click="openDeletePosition(scope.row)"
-                    :disabled="!isEditMode"
                   >
                     Удалить
                   </el-button>
@@ -364,7 +382,48 @@ interface OrgNode {
   positions?: TreePosition[]
 }
 
+
 const ORG_STORAGE_KEY = 'competence-matrix-org-tree'
+
+const treeRef = ref<any>(null) // можно потом типизировать, но так проще
+const expandPathToNode = (id: string) => {
+  if (!treeRef.value) return
+
+  const tree = treeRef.value
+  const node = tree.getNode(id) // так как node-key="id", можно искать по id
+
+  if (!node) return
+
+  // собираем всех родителей
+  const parents: any[] = []
+  let p = node.parent
+  while (p) {
+    parents.push(p)
+    p = p.parent
+  }
+
+  // раскрываем родителей от корня к листу
+  parents.reverse().forEach((parentNode) => {
+    tree.expandNode(parentNode, true, false)
+  })
+
+  // подсвечиваем сам узел
+  tree.setCurrentKey(id, true)
+}
+
+const parentNode = computed<OrgNode | null>(() => {
+  if (!selectedNode.value) return null
+  return findParentNode(treeData.value, selectedNode.value.id)
+})
+
+const goToParent = () => {
+  if (!selectedNode.value) return
+  const parent = findParentNode(treeData.value, selectedNode.value.id)
+  if (!parent) return
+
+  selectedNode.value = parent
+  expandPathToNode(parent.id)
+}
 
 function defaultTree(): OrgNode[] {
   return [
@@ -460,6 +519,10 @@ const isEditMode = computed(() => uiStore.isEditMode)
 
 const treeData = ref<OrgNode[]>(loadTree())
 const selectedNode = ref<OrgNode | null>(treeData.value[0] ?? null)
+const focusNode = (node: OrgNode) => {
+  selectedNode.value = node
+  expandPathToNode(node.id)
+}
 
 const treeProps = {
   label: 'name',
@@ -509,6 +572,7 @@ const deletePositionId = ref<string | null>(null)
 
 const handleNodeClick = (data: OrgNode) => {
   selectedNode.value = data
+  focusNode(data)
 }
 
 const selectNode = (node: OrgNode) => {
@@ -828,4 +892,5 @@ const confirmDeletePosition = () => {
 .mr-4 {
   margin-right: 4px;
 }
+
 </style>
